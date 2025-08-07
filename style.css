@@ -1,0 +1,259 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  background-color: rgb(40, 80, 0); /* Darker Green */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Align to top to make space for controls */
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+  padding-top: 20px;
+  cursor: none; /* Custom cursor will be used */
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.game-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  width: clamp(300px, 80vw, 550px); /* Responsive width */
+}
+
+.settings-panel, .action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.game-controls label {
+  margin-right: 5px;
+  font-weight: bold;
+}
+
+.game-controls select, .game-controls button {
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  color: #333;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.game-controls select {
+    min-width: 80px;
+}
+
+.game-controls button:hover {
+  background-color: #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.game-controls button:disabled {
+  background-color: #d3d3d3;
+  color: #777;
+  cursor: not-allowed;
+}
+
+#newGameBtn {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  border-color: #4CAF50;
+}
+#newGameBtn:hover {
+  background-color: #45a049;
+}
+
+#pauseBtn, #restartBtn {
+    background-color: #ffc107; /* Amber */
+    color: black;
+    border-color: #ffc107;
+}
+#pauseBtn:hover, #restartBtn:hover {
+    background-color: #e0a800;
+}
+
+
+.score-time-box {
+  display: flex;
+  justify-content: space-around;
+  width: clamp(300px, 70vw, 450px);
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 2px solid #fff;
+  border-radius: 8px;
+}
+
+.score-time-box h3 {
+  font-size: 1.4rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.board-area {
+  position: relative; /* For overlay positioning */
+}
+
+.board {
+  display: grid;
+  /* grid-template-columns and rows will be set by JS via CSS variables */
+  grid-template-columns: repeat(var(--board-cols, 3), 1fr);
+  grid-template-rows: repeat(var(--board-rows, 3), 1fr);
+  gap: var(--board-gap, 20px); /* Default gap */
+  width: var(--board-width, 300px); /* Default width */
+  height: var(--board-height, 300px); /* Default height */
+  padding: 10px;
+  background-color: rgb(111, 78, 55); /* Soil color */
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 0 15px rgba(0,0,0,0.2);
+}
+
+.hole {
+  background-color: rgb(87, 65, 47); /* Darker soil for hole */
+  border-radius: 50%;
+  box-shadow: inset 0 8px 0 5px rgb(53, 21, 6), /* Depth illusion */
+    inset 0 15px 15px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  cursor: none; /* Hammer cursor will be active */
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hole .mole {
+  width: 70%; /* Adjust as needed */
+  max-width: 100px; /* Prevent overly large moles on big boards */
+  height: auto;
+  position: absolute; /* Positioned by animation if needed */
+  bottom: 0;
+  animation: raise 0.25s ease-out;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@keyframes raise {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+/* Bonus/Penalty Mole visual cue (optional, if not using new images) */
+.mole.bonus-flash { /* Example: if we wanted a quick flash */
+    animation: raise 0.25s ease-out, bonusColorFlash 0.5s ease-in-out;
+}
+@keyframes bonusColorFlash {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.5) hue-rotate(90deg); } /* Quick green flash */
+}
+.mole.penalty-flash {
+    animation: raise 0.25s ease-out, penaltyColorFlash 0.5s ease-in-out;
+}
+@keyframes penaltyColorFlash {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(0.7) saturate(2); } /* Quick dim red flash */
+}
+
+
+.cursor {
+  width: 90px; /* Adjusted size */
+  height: 90px;
+  position: absolute;
+  background-image: url("./assets/hammer.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  transform: translate(-15%, -15%); /* Centering might need fine-tuning */
+  transition: transform 0.05s ease-out;
+  pointer-events: none;
+  z-index: 1000;
+  display: none; /* Hidden initially */
+}
+
+.cursor.active {
+  transform: translate(-15%, -15%) rotate(-45deg);
+}
+
+.game-status-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+  border-radius: 10px; /* Match board radius */
+  z-index: 500; /* Above moles but below cursor */
+}
+
+.final-score-display {
+  display: none; /* Managed by JS */
+  padding: 20px 30px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid #FFD700; /* Gold border */
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  z-index: 1100; /* On top of everything */
+  position: fixed; /* Centered on screen */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.final-score-display h2 {
+  font-size: 2.5rem;
+  color: #FFD700;
+  margin-bottom: 10px;
+}
+.final-score-display h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+.final-score-display #finalScoreValue {
+  color: #FFA500; /* Orange for score */
+  font-weight: bold;
+}
+
+#playAgainBtn {
+  padding: 12px 25px;
+  font-size: 1.2rem;
+  background-color: #007bff; /* Blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+#playAgainBtn:hover {
+  background-color: #0056b3;
+}
+
+/* Dynamic board sizing styles (adjust as needed) */
+.board.size-3x3 { --board-cols: 3; --board-rows: 3; --board-width: 300px; --board-height: 300px; --board-gap: 20px; }
+.board.size-4x4 { --board-cols: 4; --board-rows: 4; --board-width: 400px; --board-height: 400px; --board-gap: 15px; }
+.board.size-5x5 { --board-cols: 5; --board-rows: 5; --board-width: 480px; --board-height: 480px; --board-gap: 10px; }

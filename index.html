@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Whack a Mole</title> </head>
+  <body>
+    <div class="game-container">
+      <div class="game-controls">
+        <div class="settings-panel">
+          <label for="difficulty">Difficulty:</label>
+          <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+
+          <label for="boardSize">Board:</label>
+          <select id="boardSize">
+            <option value="3x3">3x3</option>
+            <option value="4x4">4x4</option>
+            <option value="5x5">5x5</option>
+          </select>
+        </div>
+        <div class="action-buttons">
+          <button id="newGameBtn">New Game</button>
+          <button id="pauseBtn" disabled>Pause</button>
+          <button id="restartBtn" disabled>Restart</button>
+        </div>
+      </div>
+
+      <div class="score-time-box">
+        <h3 class="score">Score: <span>00</span></h3>
+        <h3 class="countdown">Time: <span>00</span> sec</h3>
+      </div>
+
+      <div class="board-area">
+        <div class="board">
+          </div>
+        <div class="game-status-overlay" style="display: none;">
+          <p id="statusMessage"></p>
+        </div>
+      </div>
+
+      <div class="cursor"></div>
+
+      <div class="final-score-display" style="display: none;">
+        <h2>Game Over!</h2>
+        <h3>Your Final Score: <span id="finalScoreValue">0</span></h3>
+        <button id="playAgainBtn">Play Again</button>
+      </div>
+    </div>
+    <script src="script.js" defer></script>
+  </body>
+</html>
